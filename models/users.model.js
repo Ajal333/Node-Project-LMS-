@@ -9,7 +9,8 @@ let userSchema = new Schema(
         password: {type:String},
         college: {type:String},
         phone: {type:Number},
-        isVerified: {type: Boolean}
+        isVerified: {type: Boolean},
+        registrationValidity: {type: Date}
     }
 );
 

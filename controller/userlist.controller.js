@@ -3,7 +3,7 @@ const Book = require("../models/books.model");
 const Withdrawn = require("../models/withdrawn_books.model");
 
 exports.view_users = (req,res) => {
-    User.find({} ,(err,user) => {
+    User.find({isVerified: true} ,(err,user) => {
         if(err)
         {
             console.log(err);

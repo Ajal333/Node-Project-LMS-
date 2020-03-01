@@ -68,7 +68,8 @@ server.post("/register",(req,res) => {
             username: req.body.username,
             college: req.body.college,
             phone: req.body.phone,
-            mail: req.body.mail
+            mail: req.body.mail,
+            registrationValidity: Date.now() + 3600000
         
         }), req.body.password, (err,user) => {
             if(err) {
@@ -127,19 +128,16 @@ Library Admin`
 
 //Mail Confirmation
 server.get('/confirm', (req,res) => {
-    res.render('confirm'); 
-    User.findOneAndUpdate({mail: req.session.mail},{isVerified:true} ,err => {
-        if(err)
-        {
-            console.log(err);
-        }
-        console.log("Done..!");
+    User.findOneAndUpdate({mail: req.session.mail,registrationValidity:{$gt:Date.now()}},{isVerified: true} , err => {
+        if(err) console.log(err);
+        res.render('confirm'); 
+        console.log('Done..!');
     });
 });
 
 //Login
 server.get('/login', (req,res) => {
-    res.render('login',{message: req.flash("Wrong Username or password")});
+        res.render('login',{message: req.flash("Wrong Username or password")});
 });
 
 server.post('/login', passport.authenticate('local', {
