@@ -59,17 +59,33 @@ server.get("/register",(req,res) => {
     res.render("register");
 });
 
-let u = {};
 server.post("/register",(req,res) => {
+    req.session.mail = req.body.mail;
     if(req.body.password == req.body.confpassword) {
 
-    u = {
-        username: req.body.username,
-        college: req.body.college,
-        phone: req.body.phone,
-        mail: req.body.mail,
-        password: req.body.password
-    };
+        User.register(new User({
+
+            username: req.body.username,
+            college: req.body.college,
+            phone: req.body.phone,
+            mail: req.body.mail
+        
+        }), req.body.password, (err,user) => {
+            if(err) {
+                console.log(err);
+                return res.redirect('/register');
+            }
+            
+            passport.authenticate('local')(req,res,() => {
+                if(req.user)
+                {
+                    console.log("User Authenticated..!");
+                }
+            });
+            console.log("User created "+user.username);
+            
+        });
+
     //sending mail to registered people
     smtpTransport = nodemailer.createTransport({
         host:'smtp.gmail.com',
@@ -111,29 +127,14 @@ Library Admin`
 
 //Mail Confirmation
 server.get('/confirm', (req,res) => {
-    res.render('confirm');
-    User.register(new User({
-
-        username: u.username,
-        college: u.college,
-        phone: u.phone,
-        mail: u.mail
-    
-    }), u.password, (err,user) => {
-        if(err) {
+    res.render('confirm'); 
+    User.findOneAndUpdate({mail: req.session.mail},{isVerified:true} ,err => {
+        if(err)
+        {
             console.log(err);
-            return res.redirect('/register');
         }
-        
-        passport.authenticate('local')(req,res,() => {
-            if(req.user)
-            {
-                console.log("User Authenticated..!");
-            }
-        });
-        console.log("User created "+user.username);
-        
-    });  
+        console.log("Done..!");
+    });
 });
 
 //Login
