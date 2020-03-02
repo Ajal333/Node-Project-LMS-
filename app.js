@@ -93,8 +93,8 @@ server.post("/register",(req,res) => {
         post:465,
         secure:true,
         auth: {
-            user: 'nerdhacker007@gmail.com',
-            pass: 'lianalmessi10'
+            user: 'visitthestars0010@gmail.com',
+            pass: 'pass@882836'
         }
     });
 
