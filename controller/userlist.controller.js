@@ -27,3 +27,16 @@ exports.view_usersbook = (req,res) => {
     });
 };
 
+
+exports.view_usersbook_label = (req,res) => {
+    Withdrawn.find({username: req.params.username}, (err,books) => {
+        if(err)
+        {
+            console.log(err);
+            return res.render('home1');
+        }
+        console.log(books);
+        res.render('userbooklist',{books:books});
+        
+    });
+};

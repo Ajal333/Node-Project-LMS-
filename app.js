@@ -140,11 +140,11 @@ server.get('/login', (req,res) => {
         res.render('login',{message: req.flash("Wrong Username or password")});
 });
 
-server.post('/login', passport.authenticate('local', {
+server.post('/login', passport.authenticate('local',{
     failureRedirect: '/login',
     failureFlash:true,
-    successRedirect: '/home1',
-}));
+    successRedirect: '/home1'
+})); 
 
 //logout
 server.get('/logout', (req,res) => {
