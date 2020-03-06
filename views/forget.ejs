@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Forget Password</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <link rel="shortcut icon" href="../assets/img/favicon.ico" type="image/x-icon">
+</head>
+
+<body class="bodyimg">
+    
+    <div class = "login">
+        <h1>Change Password</h1>
+       <form action='/forget' method="POST">
+           <label>Username: </label>
+           <input type="text" name="username" required><br><br>
+           <label>Mail: </label>
+           <input type="text" name="mail" required><br><br>
+           <label>Confirm mail: </label>
+           <input type="text" name="confmail" required><br><br>
+           <button>Confirm</button><br><br>
+       </form>
+       <form action = "/login">
+        <button>Login</button>
+        </form>
+    </div>
+
+
+</body>

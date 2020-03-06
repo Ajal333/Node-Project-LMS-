@@ -152,6 +152,83 @@ server.get('/logout', (req,res) => {
     res.redirect('/login');
 });
 
+//Forget Password
+server.get('/forget', (req,res) => {
+    res.render('forget');
+});
+
+server.post('/forget', (req,res) => {
+    
+    User.findOne({username: req.body.username}, (err,users) => {
+        if(err) 
+        {
+            console.log(err);
+            
+        }
+        if(users.mail == req.body.mail && users.mail == req.body.confmail)
+        {
+                //sending mail to change password
+    smtpTransport = nodemailer.createTransport({
+        host:'smtp.gmail.com',
+        post:465,
+        secure:true,
+        auth: {
+            user: 'visitthestars0010@gmail.com',
+            pass: 'pass@882836'
+        }
+    });
+
+    let msg = {
+        to: req.body.mail,
+        from: 'Library Admin <nerdhacker007@gmail.com>',
+        subject: 'Change Password Link',
+        text: `Hey ${req.body.username},
+
+Click on this link to change your password http://localhost:8000/changepass .
+
+Regards,
+Library Admin`
+    };
+
+    smtpTransport.sendMail(msg, (err) => {
+        if(err) return console.log(err);
+        console.log("Mail sent to "+req.body.username+".");
+        return res.redirect('/thankyou');
+    });
+
+        } 
+        else
+        {
+            res.redirect('/forget');
+            console.log("Mail Mismatch");
+            
+        }
+    });
+});
+
+server.get('/changepass' , (req,res) => {
+    res.render('changepass');
+});
+
+server.post('/changepass' ,(req,res) => {
+    if(req.body.password == req.body.confpassword){
+        User.findOne({username: req.body.username} ,(err,users) => {
+            users.setPassword(req.body.password, err => {
+                users.save(err => {
+                    if(err) return console.log(err);
+                    console.log("Password Changed");
+                    res.redirect('/login');
+                });
+            });
+        });
+    }
+    else{
+        res.redirect('/changepass');
+        console.log("Password Mismatch.");
+        
+    }
+})
+
 //Add book
 server.get('/addbook', (req,res) => {
     res.render("addbook");
