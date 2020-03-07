@@ -294,13 +294,13 @@ server.get('/takebook', (req,res) => {
 });
 
 server.post('/takebook', (req,res) => {
-    Book.find({name:req.body.name, author: req.body.author},(err,books) => {
+    Book.findOne({name:req.body.name, author: req.body.author},(err,books) => {
         if(err) return res.redirect('/takebook');
         console.log(books);
         withdrawn = new Withdrawn({
             name: req.body.name,
             author: req.body.author,
-            genre: books[0].genre,
+            genre: books.genre,
             username: req.body.username
         }); 
         console.log(withdrawn);
@@ -322,6 +322,43 @@ server.post('/takebook', (req,res) => {
             return res.redirect('/takebook');
         }
         console.log(("The book "+req.body.name+" by "+req.body.author+" is deleted."));
+    });
+});
+
+//To return book
+server.get('/returnbook', (req,res) => {
+    res.render('returnbook');
+});
+
+server.post('/returnbook' ,(req,res) => {
+    Withdrawn.findOne({name: req.body.name, author:req.body.author},(err,books) => {
+        if(err) console.log(err);
+        console.log(books);
+        
+        book = new Book({
+            name: req.body.name,
+            author: req.body.author,
+            genre: req.body.genre
+        });
+        console.log(book);
+        
+        book.save((err,docs) => {
+            if(err)
+            {
+                console.log(err);
+                res.redirect('/returnbook');
+            }
+            console.log("The bbook "+req.body.name+" is returned.");       
+        });
+    });
+    Withdrawn.deleteOne({name: req.body.name, author: req.body.author}, err =>{
+        if(err)
+        {
+            console.log(err);
+            return res.redirect('/returnbook');    
+        }
+        console.log("The book "+req.body.name+" has been deleted from the taken db.");
+        res.redirect('/booklist');
     });
 });
 
