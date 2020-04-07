@@ -377,4 +377,8 @@ server.get('/thankyou',(req,res) => {
     res.render('thankyou');
 });
 
-server.listen(8000);
+
+const port = process.env.port || 8000;
+server.listen(port, () => {
+    console.log("Listening to port ",port);
+});
